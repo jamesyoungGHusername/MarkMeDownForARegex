@@ -84,7 +84,7 @@ The expression is looking for a string that may or may not end (remember the `$`
 
 Some special sets of characters match to broad categories of character, and for each there is also an inverse.
 
-`\d` matches to any digit, and `\D` matches to any non digit, for example. This is important to remember going into the next session.
+`\d` matches to any digit, and `\D` matches to any non digit, for example. This is important to remember going into the next section.
 
 ### Bracket Expressions
 
