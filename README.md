@@ -1,121 +1,156 @@
 # MarkMeDownForARegex
 
-## Your Task
+Regular expressions (RegEx) can be used to interact with text. They're extremely handy for a large number of things, including but not limited to concisely searching through text, or for validating user input. In general terms they define some set of search parameters to be applied to a query. Unfortunately they're not easy to understand at a glance.
 
-Developers write code, but they also *write about code*. Take a moment to search the web for tutorials about any of the subjects you’ve learned so far in this course. You’re likely to find thousands of tutorials written by developers of all skill levels, including junior developers&mdash;like yourself!
+## Summary
 
-Your assignment this week is to create a tutorial that explains how a specific regular expression, or regex, functions by breaking down each part of the expression and describing what it does. You'll use the template provided in the starter code to create your walkthrough.
+This tutorial will cover the following expression as an example:  
+`/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/`
 
-## User Story
+The layman might guess based on the https visible at the start that this expression might have something to do with a URL, and they'd be right! It checks a URL to see whether or not it fulfills a set of parameters. The specifics of how it does this and what those parameters are is covered below.
 
-```md
-AS A web development student
-I WANT a tutorial explaining a specific regex
-SO THAT I can understand the search pattern the regex defines
-```
+## Table of Contents
 
-## Acceptance Criteria
+- [Anchors](#anchors)
+- [Quantifiers](#quantifiers)
+- [Grouping Constructs](#grouping-constructs)
+- [Bracket Expressions](#bracket-expressions)
+- [Character Classes](#character-classes)
+- [The OR Operator](#the-or-operator)
+- [Flags](#flags)
+- [Character Escapes](#character-escapes)
 
-```md
-GIVEN a regex tutorial
-WHEN I open the tutorial
-THEN I see a descriptive title and introductory paragraph explaining the purpose of the tutorial, a summary describing the regex featured in the tutorial, a table of contents linking to different sections that break down each component of the regex and explain what it does, and a section about the author with a link to the author’s GitHub profile
-WHEN I click on the links in the table of contents
-THEN I am taken to the corresponding sections of the tutorial
-WHEN I read through each section of the tutorial
-THEN I find a detailed explanation of what a specific component of the regex does
-WHEN I reach the end of the tutorial
-THEN I find a section about the author and a link to the author’s GitHub profile
-```
+## Regex Components
 
-## What Is a Regex?
+Fortunately, not everything about RegEx will be new to the average user. Parentheses (()) function in exactly the same way they normally do, by defining groups of expressions. And the "\\" can also function as an escape character, so `\/` is /, `\.` is .
 
-A **regex**, which is short for **regular expression**, is a sequence of characters that defines a specific search pattern. When included in code or search algorithms, regular expressions can be used to find certain patterns of characters within a string, or to find and replace a character or sequence of characters within a string. They are also frequently used to validate input. 
+### Anchors
+`/`<mark>^</mark>`(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?`<mark>$</mark>`/`
 
-For example, the following regular expression can be used to verify that user input is a valid email address:
+True to their name, regex Anchors *anchor* the expression to specific positions on the string.  
+The `^` anchor refers to the start of the string, and the `$` anchor refers to the end of it.  
+If one wanted to check whether or not a string began with the letter "H", they could use `^H`, and if they wanted to check whether a string ended with a "d", they could use `d$`.
 
-`/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/`
+So, lets start from the beginning.
+Given that parentheses define groups of expressions, and that anchors match to positions on a string, we can figure out the first parts of the example expression.
 
-Each component of this regex has a unique responsibility to make sure that a user enters an email address that begins with an unspecified number of characters preceding the `@` symbol, followed by a domain.
+<mark>^</mark>`(https?:\/\/)?`
 
-Before you get started, watch this [introduction to regular expressions video](https://youtu.be/7DG3kCDx53c) and read [Regex Tutorial: Matching a Username](https://coding-boot-camp.github.io/full-stack/computer-science/regex-tutorial) to learn how to identify the different components that make up a regex. If you need any additional help, there are many resources on the web. Feel free to do your own research to find one that can help you complete this assignment.
+From the `^` we know that it's looking at the beginning of the string, and we know that it's looking for something that satisfies whatever parameters are defined by the group `(https?:\/\/)?`
 
-Once you have a better understanding of what these different parts of a regular expression do, you’ll need to explain what they do for a specific regex.
+This looks very much like the start of a URL, but you may be asking yourself, "what are those question marks?"
 
-You can choose one of the following regular expressions or you can choose one that you found on your own (with the exception of the one that is covered in the [Regex Tutorial: Matching a Username](https://coding-boot-camp.github.io/full-stack/computer-science/regex-tutorial):
+### Quantifiers
 
-* Matching a Hex Value: `/^#?([a-f0-9]{6}|[a-f0-9]{3})$/`
+`/^(https`<mark>?</mark>`:\/\/)`<mark>?</mark>`([\da-z\.-]`<mark>+</mark>`)\.([a-z\.]`<mark>{2,6}</mark>`)([\/\w \.-]`<mark>*</mark>`)`<mark>*</mark>`\/`<mark>?</mark>`$/`
 
-* Matching an Email: `/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/`
+The question marks mark something as optional. That is, if there is a question mark after some statement, it's equivalent to saying "this part might be present, and it might not be." It's a subtype of a broader category of components known as "quantifiers"
 
-* Matching a URL: `/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/`
+Quantifiers match to something being present some number of times. There's 4 types: `?`, `+`, `*` and `{}`. The last one (`{}`) can be used in three different ways, and all of them can either be "Greedy" or "Lazy". However that distinction is not relevant to this example.
 
-* Matching an HTML Tag: `/^<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)$/`
+* `?`: Modifies an expression to say it matches zero or one time. (It's present or it's not, but it's not present more than once.)
 
-## Getting Started
+* `+`: Matches one or more times. (Says something matching the modified expression is present at least once, but maybe more times.)
 
-Instead of creating a repository, you’ll publish a GitHub gist. GitHub describes a **gist** as a simple way to share code snippets with others. It’s also an ideal way to demonstrate a technique, teach a principle, or show off a solution. It functions just like a repository, and you’ll use Markdown to create it, just as you do with your READMEs. Gists can include code, images, links, and anything else you can include in a README.
+* `*`: Matches zero or more times. (Says something matching the modified expression may be present any number of times, or it may not be present at all.)
 
-After you’ve downloaded the starter code, learn [how to create a gist](https://help.github.com/en/github/writing-on-github/creating-gists). You can also watch this [video on how to use gists](https://www.youtube.com/watch?v=wc2NlcWjQHw).
+and finally
 
-> **Important**: Make sure to create a **public** gist and add the `.md` file extension to the file name so that your Markdown renders correctly.
+* `{}`: Is a general use quantifier. It comes in three types {n}, {n,}, and {n,m}, which correspond to matching exactly n number of times, matching at least n number of times, and matching between n and m number of times. (For example: {3,5} would be looking for something that matches between 3 and 5 times inclusive, and {3,} would be looking for something that matches at least three times.) The first three expressions (`?`, `+`, and `*`) can be rewritten in terms of this quantifier. Matching 0 or 1 times could be rewritten as {0,1}, matching at least once but potentially more times could be rewritten as {1,} and matching zero or more times can be rewritten as {0,}.
 
-The starter code is a template with a title, introductory paragraph, summary, and table of contents. The table of contents should link to sections of the tutorial that describe the functionality of each component in the regex. Be sure to rename the template to a unique name that describes your tutorial.
+So, to break down the first part of the example expression:
 
-> **Note**: The regular expression that you choose might not include all of the components outlined in the starter code. After you’ve finished your walkthrough, you can remove any sections that you didn’t use.
+`^(https?:\/\/)?`
 
-Each section that describes a component should include more than just one sentence explaining what it does. It should also include a code snippet of that particular component and some examples that meet the requirements of that component.
+both the s in https and the entire http(s) prefix are optional. In plain language, the URL might begin with http, it might begin with https and it might not begin with http(s):// at all. Note that the ? following the s only applies to the s, but the ? following the ) applies to everything within the parentheses.
 
-> **Important**: Make revisions to your gist in the GitHub gist UI. This will create a revision history that graders can use to verify that the tutorial content is yours.
+`([\da-z\.-]`<mark>+</mark>`)`
 
-## Grading Requirements
+Then, it's looking for something that will be present at least once, but perhaps more times.
 
-> **Note**: If a Challenge assignment submission is marked as “0”, it is considered incomplete and will not count towards your graduation requirements. Examples of incomplete submissions include the following:
->
-> * A repository that has no code
->
-> * A repository that includes a unique name but nothing else
->
-> * A repository that includes only a README file but nothing else
->
-> * A repository that only includes starter code
+`([a-z\.]`<mark>{2,6}</mark>`)`
 
-This Challenge is graded based on the following criteria:
+Following that, it's looking for something that will be present between 2 and 6 times.
 
-### Deliverables: 30%
+`([\/\w \.-]`<mark>*</mark>`)`
 
-* A valid URL of your GitHub gist.
+Then it's searching for something that will be present zero or more times.
 
-* Your GitHub gist that contains the tutorial Markdown. Your gist must include the `.md` file extension so that your Markdown renders correctly.
+Skipping to the end:
+`\/`<mark>?</mark>`$/`
+The expression is looking for a string that may or may not end (remember the `$` is the anchor for the end of the string) in a `/`
 
-### Technical Acceptance Criteria: 50%
+### Character Classes
 
-* Satisfies all of the above acceptance criteria plus the following:
+Some special sets of characters match to broad categories of character, and for each there is also an inverse.
 
-    * Revisions to the tutorial must be made in the GitHub gist UI so that graders have access to your revision history.
+`\d` matches to any digit, and `\D` matches to any non digit, for example. This is important to remember going into the next session.
 
-    * The tutorial must cover one of the regex examples listed above or another of your choice. You may NOT use the regex covered in the [Regex Tutorial: Matching a Username](https://coding-boot-camp.github.io/full-stack/computer-science/regex-tutorial).
+### Bracket Expressions
 
-    * The tutorial must include sections that correspond to each of the components that make up the regex. You may not need to use all of the sections included in the starter code, but you should include all of the sections that correspond to the different components of the regex you chose.
+`/^(https?:\/\/)?(`<mark>`[`</mark>`\da-z\.-`<mark>`]`</mark>`+)\.(`<mark>`[`</mark>`a-z\.`<mark>`]`</mark>`{2,6})(`<mark>`[`</mark>`\/\w \.-`<mark>`]`</mark>`*)*\/?$/`
 
-    * Each section that describes a component must include more than just one sentence explaining what it does. It’s okay to use online resources for assistance, but do not copy and paste; explain each component in your own words and be thorough.
+The contents of brackets specify the types of characters allowed to be present within a particular sub expression. It can be used in three ways
 
-    * Each section that describes a component must include a code snippet of that particular component. Use backticks to display your code snippets in Markdown.
+* \[abc\] Brackets can be used to define an explicit list of characters. \[a\] would allow only a, \[crhq\] would allow only the letters c, r, h, and q.
 
-    * Each section that describes a component must include at least one example that meets the requirements of that component.
+* \[a-c\] They can be used to define a range of characters. a-c allows letters a-c. e-l allows letters e through l.
 
-### Tutorial Clarity and Quality: 20%
+* \[^a\] Lastly a ^ can be added to specify the inverse. While \[a\] allows only the letter a, \[^a\] specifies that the letter a may not be present. \[^a-c\] specifies that the range of letters between a and c (inclusive) may not be present.
 
-* Tutorial provides a clear explanation of how the regex works. Be as concise as possible.
+From the example expression:
 
-* Tutorial describes each regex component in a separate section.
+`([\da-z\.-]+)`
 
-## Review
+The character set within the brackets allows any digit, any lowercase letters from a-z, periods, and hyphens (-).
+The + indicates that characters matching the preceding set will be present one or more times.
 
-You are required to submit the following for review:
+`([a-z\.]{2,6})`
 
-* The URL of the GitHub gist. Give the gist a unique name.
+The character set within these brackets allows lowercase letters from a-z, and periods.
+The quantifier specifies that there will be between 2 and 6 (inclusive) characters matching this set.
 
----
+`([\/\w \.-]*)`
 
-© 2022 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
+Lastly, this character set allows forward slashes (`\/`), periods, spaces, and any "word character".
+The word character is indicated by `\w` which is similar to how `\d` defines any digit. A word character is any lowercase, uppercase, digit, or underscore.
+The quantifier indicates that characters matching the allowed set may be present zero or more times.
+
+
+At this point we actually have everything we need to understand the expression.
+
+`/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/`
+
+`/^(https?:\/\/)?`
+Matches to a string that may begin with `http://`, `https://` or may be missing the http tag entirely.
+
+`([\da-z\.-]+)`
+That must be followed by at least one character matching a digit, a lowercase letter, a period, or a hyphen. (This is the address. If the URL being checked was github.com, this section would refer to "github")
+
+`\.([a-z\.]{2,6})`
+The first part of the address must then be followed by a period and between 2 and 6 characters consisting of only lowercase letters and additional periods. (This is the ".com", or the ".net", or the ".co.uk").
+
+`([\/\w \.-]*)*`
+The suffix (be it .com or anything else) can then optionally be followed by any number of characters matching the provided set. (If the URL being checked was github.com/jamesyoungGHusername this sub-expression would check the /jamesyoungGHusername). The final * indicates that any number of expressions matching this description may be present.
+
+Finally,   
+`\/?$/`
+Indicates that the end of the string may or may not have a trailing \/ character.
+
+
+### The OR Operator
+
+One operator not used in this example is the OR operator "|" which works in the same way as it does in programming. a|b accepts the characters a or b. Ten|10 accepts "Ten" or "10".
+
+### Flags
+
+Lastly, the example above is enclosed by slashes. Every part of a regular expression must be enclosed by these slashes EXCEPT any flags that are used. They're placed after the final slash character, and they can specify any special rules for that expression.
+
+Flags are tricky, as they're used to indicate special behaviors. The docs describing their use can be found [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#advanced_searching_with_flags).
+
+For example, adding an i to the end of the expression indicates that it is not sensitive to case. 
+
+
+## Author
+
+[James Young](https://github.com/jamesyoungGHusername) completed a degree in economics only to discover that his true love was programming. He should have figured it out when he was going out of his way to find every excuse to write code. He is a full stack developer with approximately 7 years of experience mostly working on whimsical personal projects.
